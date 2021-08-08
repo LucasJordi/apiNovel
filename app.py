@@ -4,7 +4,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from flask_cors import CORS
-
+import os
 
 
 app = Flask(__name__)
@@ -105,25 +105,40 @@ class Search(Resource):
         soup = BeautifulSoup(page.text, 'html.parser')
         lista=soup.find(class_="list list-truyen col-xs-12")
         pp=[]
-        one_page=False 
+        one_page=False
+        last=0 
         try:
-            last=soup.find(class_="last").get("data-page")
+            last=soup.find(class_="last").a.get("data-page")
             one_page=False
         except:
             print("Só uma pagina")
             one_page=True    
-        for ln in lista.find_all("div"):
-             
-            try :
-                if ln.get("class")[0]=="row":
+        
+        def passarLista(lista):
+            for ln in lista.find_all("div"):
                 
-                    pp.append({"cover":ln.find(class_="col-xs-3").div.img.get("src"),"name":ln.a.get("title"),"link":path+ln.a.get("href")})
-            except:
-                print("None")
+                try :
+                    if ln.get("class")[0]=="row":
+                    
+                        pp.append({"cover":ln.find(class_="col-xs-3").div.img.get("src"),"name":ln.a.get("title"),"link":path+ln.a.get("href")})
+                except:
+                    print("None")
+
+        if one_page:
+            passarLista(lista)
+        else:
+            for i in range(int(last)+1):
+                i+=1
+                page = requests.get(path+"/search?keyword="+response[0]+"&page="+str(i))
+                soup = BeautifulSoup(page.text, 'html.parser')
+                lista=soup.find(class_="list list-truyen col-xs-12")
+                
+                passarLista(lista)                
         return{"pp":pp,"len":len(pp)}
     
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
 
