@@ -121,7 +121,7 @@ class Search(Resource):
                 try :
                     if ln.get("class")[0]=="row":
                     
-                        pp.append({"cover":ln.find(class_="col-xs-3").div.img.get("src"),"name":ln.a.get("title"),"link":path+ln.a.get("href")})
+                        pp.append({"cover":path+ln.find(class_="col-xs-3").div.img.get("src"),"name":ln.a.get("title"),"link":path+ln.a.get("href")})
                 except:
                     print("None")
 
