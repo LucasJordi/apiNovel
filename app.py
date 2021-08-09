@@ -101,8 +101,8 @@ class View(Resource):
 class Search(Resource):
     def post(self):
         args = parser.parse_args()        
-        response=args['word'].replace(" ", "+")
-        page = requests.get(path+"/search?keyword="+response[0])
+        response=args['word']
+        page = requests.get(path+"/search?keyword="+response[0].replace(" ", "+"))
         soup = BeautifulSoup(page.text, 'html.parser')
         lista=soup.find(class_="list list-truyen col-xs-12")
         pp=[]
