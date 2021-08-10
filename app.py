@@ -106,6 +106,7 @@ class Search(Resource):
         soup = BeautifulSoup(page.text, 'html.parser')
         lista=soup.find(class_="list list-truyen col-xs-12")
         pp=[]
+        tt=[]
         one_page=False
         last=0 
         try:
@@ -116,6 +117,7 @@ class Search(Resource):
             one_page=True    
         
         def passarLista(lista):
+            
             for ln in lista.find_all("div"):
                 
                 try :
@@ -133,10 +135,14 @@ class Search(Resource):
                 page = requests.get(path+"/search?keyword="+response[0]+"&page="+str(i))
                 soup = BeautifulSoup(page.text, 'html.parser')
                 lista=soup.find(class_="list list-truyen col-xs-12")
-                
-                passarLista(lista)                
-        return{"pp":pp,"len":len(pp)}
-    
+                #tt.append(lista.find_all("div"))
+                passarLista(lista) 
+                       
+        return{"search":pp,"len":len(pp)}
+
+
+
+
 
 
 if __name__ == '__main__':
