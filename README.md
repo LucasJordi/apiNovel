@@ -1,1 +1,1 @@
-# API made in Flask for bring data to novels in NovelFull site
+# API made in Flask for bring data of novels in NovelFull site
